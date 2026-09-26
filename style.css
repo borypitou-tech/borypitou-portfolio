@@ -1,0 +1,418 @@
+/* ===================================================
+   1. GLOBAL RESET & BASE STYLES
+   =================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background-color: #0F0F11;
+    color: #EDEDED; /* Soft white so text isn't piercingly bright */
+}
+
+/* ===================================================
+   2. HEADER CONTAINER (DESKTOP & LAPTOP FIRST)
+   =================================================== */
+header {
+    background-color: #000000;              /* Solid black header */
+    border-bottom: 1px solid #262626;       /* Subtle dark-gray bottom border */
+    padding: 18px 40px;                     /* Spacing around the header */
+    
+    /* Flexbox puts Logo on the LEFT and Nav on the RIGHT */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    /* Keeps header fixed to the top when scrolling */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* ===================================================
+   3. LEFT SIDE (PORTFOLIO LOGO / TEXT)
+   =================================================== */
+header nav:first-child h1 {
+    font-size: 1.4rem;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    user-select: none;
+}
+
+/* ===================================================
+   4. RIGHT SIDE (NAVIGATION LINKS & BUTTONS)
+   =================================================== */
+header nav:last-child {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Space between each navigation link */
+}
+
+/* Default link styles */
+header nav:last-child a {
+    text-decoration: none;
+    color: #a3a3a3;                /* Muted gray for non-active links */
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover effect on links */
+header nav:last-child a:hover {
+    color: #ffffff;
+    background-color: #1a1a1a;     /* Subtle dark hover background */
+}
+
+/* Turn the last link ("Contact") into a clean high-contrast button */
+header nav:last-child a:last-child {
+    background-color: #ffffff;     /* White solid button */
+    color: #000000;                /* Black text */
+    font-weight: 600;
+}
+
+header nav:last-child a:last-child:hover {
+    background-color: #e5e5e5;     /* Slightly dimmer white on hover */
+    transform: translateY(-1px);   /* Subtle lift effect */
+}
+
+/* ===================================================
+   5. RESPONSIVE DESIGN (FOR MOBILE PHONES)
+   =================================================== */
+@media (max-width: 600px) {
+    header {
+        /* Stack the brand on top and links below on small screens */
+        flex-direction: column;
+        padding: 16px 20px;
+        gap: 14px;
+    }
+
+    /* Keep the logo centered or slightly prominent on mobile */
+    header nav:first-child h1 {
+        font-size: 1.3rem;
+    }
+
+    /* Make links fill nicely horizontally on mobile */
+    header nav:last-child {
+        width: 100%;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    header nav:last-child a {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+}
+
+
+
+
+
+
+/* ===================================================
+   Layer1
+   =================================================== */
+/* ===================================================
+   LAYER 1 (HERO SECTION) - MAIN CONTAINER
+   =================================================== */
+layer1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 30px;
+    min-height: calc(100vh - 80px); /* Centers nicely on laptop screen */
+}
+
+/* ===================================================
+   LEFT COLUMN: TEXT, BIO & CONTACT BUTTON
+   =================================================== */
+.intro-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Small status pill above the name */
+.status-badge {
+    font-size: 0.8rem;
+    color: #a3a3a3;
+    border: 1px solid #262626;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    background-color: #141414;
+    letter-spacing: 0.5px;
+}
+
+/* Big Name Title */
+.intro-left h1 {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    color: #888888;          /* Muted gray for "Hi, I'm" */
+    margin-bottom: 18px;
+    font-weight: 700;
+}
+
+.intro-left h1 .highlight {
+    color: #ffffff;          /* Pure white to make "Peter" pop */
+}
+
+/* Paragraph Description */
+.description {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: #a3a3a3;          /* Soft readable light gray */
+    margin-bottom: 30px;
+    max-width: 520px;
+}
+
+/* Attractive Contact Button */
+.btn-contact {
+    display: inline-block;
+    background-color: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 8px;
+    border: 1px solid #ffffff;
+    transition: all 0.25s ease-in-out;
+}
+
+/* Button Hover State */
+.btn-contact:hover {
+    background-color: #000000;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
+
+/* ===================================================
+   RIGHT COLUMN: CROPPED IMAGE & HOVER SWITCH
+   =================================================== */
+.intro-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Frame container with crop (overflow: hidden) */
+.image-wrapper {
+    position: relative;
+    width: 320px;
+    height: 380px;
+    border-radius: 18px;              /* Rounded modern border */
+    overflow: hidden;                 /* Crops images neatly inside */
+    border: 1px solid #262626;        /* Subtle outline */
+    background-color: #171717;
+}
+
+/* Shared image styles */
+.image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;               /* Ensures image fills without stretching */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Back image is hidden by default */
+.img-back {
+    opacity: 0;
+}
+
+/* Hover effect: Front image fades out, Back image fades in & zooms slightly */
+.image-wrapper:hover .img-front {
+    opacity: 0;
+}
+
+.image-wrapper:hover .img-back {
+    opacity: 1;
+    transform: scale(1.04);
+}
+
+/* ===================================================
+   RESPONSIVE DESIGN (TABLETS & MOBILE PHONES)
+   =================================================== */
+@media (max-width: 768px) {
+    layer1 {
+        flex-direction: column-reverse; /* Puts image at the top or adjusts order */
+        text-align: center;
+        padding: 50px 20px;
+        gap: 32px;
+    }
+
+    .intro-left {
+        align-items: center; /* Center-align everything on mobile */
+    }
+
+    .intro-left h1 {
+        font-size: 2.5rem;
+    }
+
+    .description {
+        font-size: 1rem;
+    }
+
+    .intro-right {
+        justify-content: center;
+        width: 100%;
+    }
+
+    /* Smaller photo size tailored for mobile phone screens */
+    .image-wrapper {
+        width: 240px;
+        height: 290px;
+    }
+}
+
+
+
+/* ===================================================
+   Layer2
+   =================================================== */
+/* ===================================================
+   LAYER 2 - LIGHTER DARK SECTION
+   =================================================== */
+layer2 {
+    display: block;
+    width: 100%;
+    /* Lighter than the #0F0F11 body background for visual depth */
+    background-color: #18181C;
+    /* Subtle borders to frame the section */
+    border-top: 1px solid #282830;
+    border-bottom: 1px solid #282830;
+    padding: 80px 20px;
+}
+
+/* Constrained inner wrapper to keep content centered */
+.layer2-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ===================================================
+   SECTION HEADER (TITLE & SUBTITLE)
+   =================================================== */
+.layer2-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.layer2-header .sub-title {
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #888899;
+}
+
+.layer2-header h2 {
+    font-size: 2.2rem;
+    color: #ffffff;
+    margin: 10px 0 14px;
+}
+
+.layer2-header p {
+    font-size: 1rem;
+    color: #9e9ea8;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ===================================================
+   CARDS GRID (RESPONSIVE)
+   =================================================== */
+.cards-grid {
+    display: grid;
+    /* 3 equal columns on desktop; wraps automatically as screen shrinks */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+/* Individual Card (uses an even lighter shade for tactile layering) */
+.card {
+    background-color: #202026;
+    border: 1px solid #2d2d38;
+    border-radius: 12px;
+    padding: 30px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+/* Subtle lift effect on hover */
+.card:hover {
+    transform: translateY(-4px);
+    border-color: #4a4a5a;
+}
+
+.card-num {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #606070;
+    margin-bottom: 16px;
+}
+
+.card h3 {
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #a0a0ab;
+}
+
+/* ===================================================
+   RESPONSIVE DESIGN (MOBILE PHONES)
+   =================================================== */
+@media (max-width: 600px) {
+    layer2 {
+        padding: 60px 16px;
+    }
+
+    .layer2-header h2 {
+        font-size: 1.75rem;
+    }
+
+    .cards-grid {
+        /* Forces single column layout on phones */
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .card {
+        padding: 24px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+.footer-css {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 14px;
+    color: #6c757d;
+}
