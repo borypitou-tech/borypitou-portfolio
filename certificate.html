@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Borypitou — Certificate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #fafaf9;
+      --surface: #f5f5f4;
+      --surface2: #efefed;
+      --border: rgba(0,0,0,0.08);
+      --border-hover: rgba(0,0,0,0.14);
+      --gold: #b8860b;
+      --blue: #2563eb;
+      --text: #1f2937;
+      --text-2: #6b7280;
+      --text-3: #9ca3af;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    #canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.5rem 0; border-bottom: 1px solid var(--border);
+      background: rgba(250,250,249,0.85); backdrop-filter: blur(20px) saturate(1.5);
+    }
+
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 2.5rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
+      position: relative;
+    }
+
+    .nav-logo {
+      font-family: 'Space Mono', monospace; font-size: 0.85rem;
+      letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex; flex-wrap: wrap; gap: 2.25rem; list-style: none; align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 500; color: var(--text-2); text-decoration: none;
+      transition: color 0.25s; position: relative; padding-bottom: 4px;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 1px; background: var(--gold);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s var(--ease);
+    }
+
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+    .nav-links a.active { color: var(--text); }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 42px;
+      height: 42px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 0;
+      transition: border-color 0.25s;
+    }
+
+    .nav-toggle:hover { border-color: var(--gold); }
+
+    .nav-toggle span {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: var(--text);
+      transition: transform 0.3s var(--ease), opacity 0.2s;
+    }
+
+    .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .page-wrap {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      padding: 140px 2.5rem 100px;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold);
+      margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;
+    }
+
+    .section-label::after {
+      content: ''; width: 50px; height: 1px; background: var(--gold); opacity: 0.4;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: end;
+      margin-bottom: 4.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-title {
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
+    }
+
+    .page-title .stroke {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--gold);
+    }
+
+    .page-desc {
+      color: var(--text-2);
+      line-height: 1.9;
+      font-size: 0.95rem;
+      align-self: end;
+    }
+
+    /* CERTIFICATES GRID */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin-bottom: 5rem;
+    }
+
+    .cert-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.4s var(--ease), background 0.3s;
+    }
+
+    .cert-card:hover {
+      border-color: var(--border-hover);
+      background: var(--surface2);
+      transform: translateY(-4px);
+    }
+
+    .cert-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--blue));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s var(--ease);
+      z-index: 2;
+    }
+
+    .cert-card:hover::before { transform: scaleX(1); }
+
+    .cert-preview-btn {
+      display: block;
+      width: 100%;
+      padding: 1.25rem 1.25rem 0;
+      border: none;
+      background: transparent;
+      cursor: zoom-in;
+      text-align: left;
+    }
+
+    .cert-img-wrap {
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .cert-img-wrap img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1024 / 723;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s var(--ease);
+    }
+
+    .cert-card:hover .cert-img-wrap img { transform: scale(1.02); }
+
+    .cert-body {
+      padding: 1.5rem 1.75rem 1.75rem;
+    }
+
+    .cert-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .cert-issuer {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .cert-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--text-3);
+    }
+
+    .cert-name {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .cert-detail {
+      font-size: 0.84rem;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    .cert-card-soon {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2.5rem 2rem;
+      border-style: dashed;
+      background: rgba(250, 250, 249, 0.5);
+    }
+
+    .cert-card-soon:hover { transform: none; }
+
+    .soon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(184, 134, 11, 0.35);
+      background: rgba(184, 134, 11, 0.06);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+
+    .soon-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+    /* LIGHTBOX DIALOG */
+    dialog.cert-dialog {
+      margin: auto;
+      max-width: min(92vw, 960px);
+      max-height: 90vh;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 1rem;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    dialog.cert-dialog::backdrop {
+      background: rgba(17, 24, 39, 0.72);
+      backdrop-filter: blur(6px);
+    }
+
+    .dialog-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .dialog-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+
+    .dialog-close {
+      padding: 0.4rem 0.75rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .dialog-close:hover { border-color: var(--gold); }
+
+    dialog.cert-dialog img {
+      display: block;
+      max-width: 100%;
+      max-height: calc(90vh - 5rem);
+      width: auto;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    /* FADE */
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    .fade-up.v { opacity: 1; transform: translateY(0); }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.75rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+
+    footer span {
+      font-family: 'Space Mono', monospace; font-size: 0.62rem;
+      color: var(--text-3); letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 900px) {
+      .nav-inner { padding: 0 1.5rem; }
+      .nav-links { gap: 1.4rem; }
+      .page-header { grid-template-columns: 1fr; gap: 2rem; }
+      .cert-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 0; }
+      .nav-toggle { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: calc(100% + 1rem + 1px);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: rgba(250, 250, 249, 0.97);
+        backdrop-filter: blur(20px) saturate(1.5);
+        border-bottom: 1px solid var(--border);
+        padding: 0.5rem 1.5rem 1rem;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        width: 100%;
+        padding: 0.9rem 0;
+        border-bottom: 1px solid var(--border);
+        justify-content: space-between;
+      }
+      .nav-links li:last-child a { border-bottom: none; }
+      .nav-links a::after { display: none; }
+      .nav-links a.active { color: var(--gold); }
+    }
+
+    @media (max-width: 600px) {
+      .page-wrap { padding: 110px 1.5rem 80px; }
+      .cert-body { padding: 1.25rem; }
+      .cert-preview-btn { padding: 1rem 1rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<nav aria-label="Primary">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">OP</a>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav-links" id="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tech.html">Tech</a></li>
+      <li><a href="crypto.html">Crypto</a></li>
+      <li><a href="certificate.html" class="active" aria-current="page">Certificate</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="section-label">Credentials &amp; Achievements</div>
+
+  <div class="page-header fade-up">
+    <h1 class="page-title">
+      Verified<br>
+      <span class="stroke">Certificates</span>
+    </h1>
+    <p class="page-desc">
+      Completed courses, blockchain credentials, and technical achievements. Click any certificate to inspect it in full view.
+    </p>
+  </div>
+
+  <div class="cert-grid fade-up">
+    <article class="cert-card">
+      <button type="button" class="cert-preview-btn" data-cert-src="images/certificate/binance-on-chain-analysis.png" data-cert-title="Binance Academy — On-Chain Analysis for Beginners" aria-label="View full certificate: On-Chain Analysis for Beginners">
+        <div class="cert-img-wrap">
+          <img src="images/certificate/binance-on-chain-analysis.png" alt="Binance Academy Certificate of Completion for On-Chain Analysis for Beginners presented to O. Borypitou">
+        </div>
+      </button>
+      <div class="cert-body">
+        <div class="cert-meta">
+          <span class="cert-issuer">Binance Academy</span>
+          <span class="cert-num">01</span>
+        </div>
+        <h2 class="cert-name">On-Chain Analysis for Beginners</h2>
+        <p class="cert-detail">Certificate of Completion &mdash; Presented to O. Borypitou.</p>
+      </div>
+    </article>
+
+    <article class="cert-card cert-card-soon">
+      <div class="soon-badge">
+        <span class="soon-dot"></span>
+        <span>More Coming Soon</span>
+      </div>
+      <div class="cert-num" style="margin-bottom: 0.5rem;">02</div>
+      <h2 class="cert-name">Additional Credentials</h2>
+      <p class="cert-detail">More technical, Web3, and language certificates are being organized and will be added here soon.</p>
+    </article>
+  </div>
+
+  <footer>
+    <span>Borypitou &mdash; Pitou_OP &copy; 2024</span>
+    <span>Phnom Penh, Cambodia</span>
+  </footer>
+</div>
+
+<dialog class="cert-dialog" id="cert-dialog" aria-labelledby="dialog-title">
+  <div class="dialog-bar">
+    <span class="dialog-title" id="dialog-title">Certificate Preview</span>
+    <button type="button" class="dialog-close" id="dialog-close">Close</button>
+  </div>
+  <img id="dialog-img" src="" alt="">
+</dialog>
+
+<script>
+  // Particle canvas
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  class P {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random()*W; this.y = Math.random()*H;
+      this.r = Math.random()*1.2+0.3;
+      this.vx = (Math.random()-0.5)*0.3; this.vy = (Math.random()-0.5)*0.3;
+      this.a = Math.random()*0.35+0.05;
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      if (this.x<0||this.x>W||this.y<0||this.y>H) this.reset();
+    }
+    draw() {
+      ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(184,134,11,${this.a})`; ctx.fill();
+    }
+  }
+  for (let i=0;i<80;i++) particles.push(new P());
+  function loop() {
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{p.update();p.draw();});
+    for (let i=0;i<particles.length;i++) for (let j=i+1;j<particles.length;j++) {
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if (d<120) {
+        ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(184,134,11,${0.07*(1-d/120)})`; ctx.lineWidth=0.5; ctx.stroke();
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // Fade in
+  const obs = new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('v');}),{threshold:0.08});
+  document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+  // Certificate lightbox
+  const certDialog = document.getElementById('cert-dialog');
+  const dialogImg = document.getElementById('dialog-img');
+  const dialogTitle = document.getElementById('dialog-title');
+  const dialogClose = document.getElementById('dialog-close');
+  document.querySelectorAll('.cert-preview-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      dialogImg.src = btn.dataset.certSrc;
+      dialogImg.alt = btn.dataset.certTitle;
+      dialogTitle.textContent = btn.dataset.certTitle;
+      certDialog.showModal();
+    });
+  });
+  dialogClose.addEventListener('click', () => certDialog.close());
+  certDialog.addEventListener('click', e => {
+    if (e.target === certDialog) certDialog.close();
+  });
+
+  // Mobile nav toggle
+  const navToggle = document.querySelector('.nav-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  if (navToggle && navMenu) {
+    const closeMenu = () => {
+      navToggle.setAttribute('aria-expanded', 'false');
+      navMenu.classList.remove('open');
+    };
+    navToggle.addEventListener('click', () => {
+      const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+      navToggle.setAttribute('aria-expanded', String(!expanded));
+      navMenu.classList.toggle('open', !expanded);
+    });
+    navMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+    document.addEventListener('click', e => {
+      if (!e.target.closest('nav')) closeMenu();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeMenu();
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) closeMenu();
+    });
+  }
+</script>
+</body>
+</html>
